@@ -11,7 +11,7 @@ rezepte = [
 # API-Routen
 @app.get("/")
 def home():
-    return {"message": "Willkommen zur Rezept-API!"}
+    return {"message": "Hi Nini. Ich liebe dich ganz doll."}
 
 @app.get("/rezepte")
 def get_rezepte():
