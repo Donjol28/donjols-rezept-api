@@ -15,7 +15,7 @@ function App() {
   };
 
   const addRezept = () => {
-    const apiUrl = 'https://deine-api-url/rezepte';
+    const apiUrl = 'https://donjols-rezept-api-production.up.railway.app/rezepte';
     fetch(apiUrl, {
       method: 'POST',
       headers: {
