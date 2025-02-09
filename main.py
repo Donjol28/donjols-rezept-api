@@ -1,21 +1,26 @@
 from fastapi import FastAPI
+from db import init_db
+from models import Rezept
 
 app = FastAPI()
 
-# Beispiel-Rezepte
-rezepte = [
-    {"id": 1, "name": "Spaghetti Carbonara", "zutaten": ["Pasta", "Eier", "Speck", "Parmesan"]},
-    {"id": 2, "name": "Pizza Margherita", "zutaten": ["Teig", "Tomatensauce", "Mozzarella", "Basilikum"]}
-]
-
-# API-Routen
-@app.get("/")
-def home():
-    return {"message": "Hi Nini. Ich liebe dich ganz doll."}
+@app.on_event("startup")
+async def startup():
+    await init_db()
 
 @app.get("/rezepte")
-def get_rezepte():
-    return rezepte
+async def get_rezepte():
+    return await Rezept.all()
+
+@app.post("/rezepte")
+async def add_rezept(rezept: dict):
+    new_rezept = await Rezept.create(**rezept)
+    return new_rezept
+
+@app.delete("/rezepte/{rezept_id}")
+async def delete_rezept(rezept_id: int):
+    await Rezept.filter(id=rezept_id).delete()
+    return {"message": "Rezept gelöscht"}
 
 
 #---------------------------------------------------------------------------------
