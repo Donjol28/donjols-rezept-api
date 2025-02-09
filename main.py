@@ -14,6 +14,10 @@ app.add_middleware(
     allow_headers=["*"],  # Alle Header erlauben
 )
 
+@app.get("/rezepte")
+async def get_rezepte():
+    rezepte = await Rezept.all()  # Alle Rezepte aus der Datenbank holen
+    return rezepte
 
 
 @app.post("/rezepte")
