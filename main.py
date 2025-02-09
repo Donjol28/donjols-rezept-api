@@ -14,17 +14,17 @@ app.add_middleware(
     allow_headers=["*"],  # Alle Header erlauben
 )
 
-@app.on_event("startup")
-async def startup():
-    await init_db()
 
-@app.get("/rezepte")
-async def get_rezepte():
-    return await Rezept.all()
 
 @app.post("/rezepte")
 async def add_rezept(rezept: dict):
-    new_rezept = await Rezept.create(**rezept)
+    new_rezept = await Rezept.create(
+        name=rezept.get("name"),
+        beschreibung=rezept.get("beschreibung"),
+        category=rezept.get("category"),
+        zutaten=rezept.get("zutaten"),
+        extra_infos=rezept.get("extra_infos")
+    )
     return new_rezept
 
 @app.delete("/rezepte/{rezept_id}")
