@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezeptverwaltung</title>
+</head>
+<body>
+
+    <h1>Rezeptverwaltung</h1>
+
+    <!-- Formular für das Hinzufügen eines neuen Rezepts -->
+    <input type="text" id="newRezept" placeholder="Neues Rezept">
+    <button onclick="addRezept()">Hinzufügen</button>
+
+    <!-- Anzeige der Rezepte -->
+    <ul id="rezepteListe"></ul>
+
+    <script>
+        // API URL (auf Railway gehostet)
+        const API_URL = "https://donjols-rezept-api-production.up.railway.app/rezepte";  // Hier die URL der FastAPI einsetzen
+
+        // Beim Laden der Seite die Rezepte abrufen
+        window.onload = function() {
+            fetchRezepte();
+        }
+
+        // Funktion zum Abrufen der Rezepte
+        async function fetchRezepte() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                // Rezepte in der Liste anzeigen
+                const ul = document.getElementById("rezepteListe");
+                ul.innerHTML = ""; // Zuerst die Liste leeren
+                data.forEach(rezept => {
+                    const li = document.createElement("li");
+                    li.textContent = rezept.name;
+                    // Löschen-Button für jedes Rezept
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Löschen";
+                    deleteButton.onclick = function() {
+                        deleteRezept(rezept.id);
+                    };
+                    li.appendChild(deleteButton);
+                    ul.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Fehler beim Abrufen der Rezepte:", error);
+            }
+        }
+
+        // Funktion zum Hinzufügen eines neuen Rezepts
+        async function addRezept() {
+            const rezeptName = document.getElementById("newRezept").value;
+            if (rezeptName.trim() === "") return; // Kein leeres Rezept
+
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name: rezeptName })
+                });
+                document.getElementById("newRezept").value = ""; // Eingabefeld leeren
+                fetchRezepte(); // Rezepte erneut abrufen
+            } catch (error) {
+                console.error("Fehler beim Hinzufügen des Rezepts:", error);
+            }
+        }
+
+        // Funktion zum Löschen eines Rezepts
+        async function deleteRezept(id) {
+            try {
+                await fetch(`${API_URL}/${id}`, {
+                    method: "DELETE"
+                });
+                fetchRezepte(); // Rezepte nach dem Löschen erneut abrufen
+            } catch (error) {
+                console.error("Fehler beim Löschen des Rezepts:", error);
+            }
+        }
+    </script>
+
+</body>
+</html>
