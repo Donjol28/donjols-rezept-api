@@ -14,10 +14,6 @@ app.add_middleware(
     allow_headers=["*"],  # Alle Header erlauben
 )
 
-@app.on_event("startup")
-async def startup():
-    await init_db()
-
 @app.get("/rezepte")
 async def get_rezepte():
     return await Rezept.all()

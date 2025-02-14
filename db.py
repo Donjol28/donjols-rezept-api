@@ -1,6 +1,6 @@
 from tortoise import Tortoise
 
-DATABASE_URL = "postgres://postgres:HqPjpMrvXoLtTzeSrOabyWxKoaIwqiYU@autorack.proxy.rlwy.net:57046/railway"
+DATABASE_URL = "postgres://postgres:wcGppSVoJsPnYSAMQgnmdXlRusNLQxAL@postgres.railway.internal:5432/railway"
 
 async def init_db():
     await Tortoise.init(
