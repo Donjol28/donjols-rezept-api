@@ -6,7 +6,7 @@ function App() {
   const [error, setError] = useState('');  // Zustand für Fehler
 
   // URL deiner API
-  const apiUrl = 'https://donjols-rezept-api-production.up.railway.app/rezepte';
+  const apiUrl = 'https://donjols-rezept-api-production.up.railway.app';
 
   // Wenn die Komponente geladen wird, Rezepte von der API holen
   useEffect(() => {
