@@ -14,31 +14,23 @@ app.add_middleware(
     allow_headers=["*"],  # Alle Header erlauben
 )
 
+@app.on_event("startup")
+async def startup():
+    await init_db()
+
 @app.get("/rezepte")
 async def get_rezepte():
-    rezepte = await Rezept.all()  # Alle Rezepte aus der Datenbank holen
-    return rezepte
-
-
-@app.post("/rezepte")
-async def add_rezept(rezept: dict):
-    new_rezept = await Rezept.create(
-        name=rezept.get("name"),
-        beschreibung=rezept.get("beschreibung"),
-        category=rezept.get("category"),
-        zutaten=rezept.get("zutaten"),
-        extra_infos=rezept.get("extra_infos")
-    )
-    return new_rezept
+    return await Rezept.all()
 
 @app.delete("/rezepte/{rezept_id}")
 async def delete_rezept(rezept_id: int):
     await Rezept.filter(id=rezept_id).delete()
     return {"message": "Rezept gelöscht"}
 
+
 #---------------------------------------------------------------------------------
 # after changing the file, please use cmd and run these commands to update the API 
 
 # git add main.py
-# git commit -m "Port auf 8080 geändert"
+# git commit -m "some text"
 # git push
